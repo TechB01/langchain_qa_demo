@@ -14,10 +14,9 @@ from langchain import PromptTemplate
 
 load_dotenv()
 
-
-PINECONE_API_KEY = '6c72c863-bd58-4d1d-bb76-f137e62386c4'
-PINECONE_ENV = 'us-west1-gcp-free'
-OPENAI_API_KEY = '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'
+PINECONE_API_KEY = os.getenv('PINECONE_API_KEY')
+PINECONE_ENV = os.getenv('PINECONE_ENV')
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
 os.environ['OPENAI_API_KEY'] = OPENAI_API_KEY
 
@@ -67,7 +66,7 @@ def retrieval_answer(query):
 
 def main():
     st.title("Generative Question-Answering with LLM")
-    uploaded_file = st.file_uploader(label='', label_visibility='hidden', type=['pdf'])
+    uploaded_file = st.file_uploader(label='File upload', label_visibility='hidden', type=['pdf'])
     if uploaded_file is not None:
         st.markdown('''
         <style>
