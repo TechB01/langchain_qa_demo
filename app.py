@@ -9,8 +9,15 @@ from langchain.chains import RetrievalQA
 from langchain.chat_models import ChatOpenAI
 from langchain.llms import OpenAI
 import streamlit as st
+from streamlit_js_eval import streamlit_js_eval
 from dotenv import load_dotenv
 from langchain import PromptTemplate
+
+st.set_page_config(
+    page_title="Generative Question-Answering with LLM",
+    page_icon="📘",
+    initial_sidebar_state="expanded",
+    )
 
 load_dotenv()
 
@@ -65,7 +72,7 @@ def retrieval_answer(query):
     return result
 
 def main():
-    st.title("Generative Question-Answering with LLM")
+    st.subheader("Generative Question-Answering with LLM")
     uploaded_file = st.file_uploader(label='File upload', label_visibility='hidden', type=['pdf'])
     if uploaded_file is not None:
         st.markdown('''
@@ -79,6 +86,7 @@ def main():
             time.sleep(1) # Wait for 3 seconds
             file_sucess.empty() # Clear the alert
             st.cache_resource.clear()
+            streamlit_js_eval(js_expressions="parent.window.location.reload()")
     text_input = st.chat_input("Ask your query...") 
     # if st.button("Ask Query"):
     if text_input:
