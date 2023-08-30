@@ -17,7 +17,7 @@ load_dotenv()
 
 PINECONE_API_KEY = '6c72c863-bd58-4d1d-bb76-f137e62386c4'
 PINECONE_ENV = 'us-west1-gcp-free'
-OPENAI_API_KEY = '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'
+OPENAI_API_KEY = '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'
 
 os.environ['OPENAI_API_KEY'] = OPENAI_API_KEY
 
