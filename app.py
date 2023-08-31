@@ -1,5 +1,6 @@
 import time
-from langchain.document_loaders import DirectoryLoader
+from langchain.document_loaders import PyPDFLoader
+from langchain.document_loaders import Docx2txtLoader
 from langchain.text_splitter import CharacterTextSplitter
 import os
 import pinecone 
@@ -37,18 +38,37 @@ os.environ['OPENAI_API_KEY'] = OPENAI_API_KEY
 
 
 def doc_preprocessing():
-    loader = DirectoryLoader(
-        'data/',
-        glob='**/*.pdf',     # only the PDFs
-        show_progress=True
-    )
-    docs = loader.load()
-    text_splitter = CharacterTextSplitter(
-        chunk_size=1000, 
-        chunk_overlap=0
-    )
-    docs_split = text_splitter.split_documents(docs)
-    return docs_split
+    # loader = DirectoryLoader(
+    #     'data/',
+    #     glob='**/*.pdf',     # only the PDFs
+    #     show_progress=True
+    # )
+    # docs = loader.load()
+    # text_splitter = CharacterTextSplitter(
+    #     chunk_size=1000, 
+    #     chunk_overlap=0
+    # )
+    # docs_split = text_splitter.split_documents(docs)
+    # return docs_split
+
+    documents = []
+    for file in os.listdir('data'):
+        if file.endswith('.pdf'):
+            pdf_path = './data/' + file
+            loader = PyPDFLoader(pdf_path)
+            documents.extend(loader.load())
+        elif file.endswith('.docx') or file.endswith('.doc'):
+            doc_path = './data/' + file
+            loader = Docx2txtLoader(doc_path)
+            documents.extend(loader.load())
+        # elif file.endswith('.txt'):
+        #     text_path = './data/' + file
+        #     loader = TextLoader(text_path)
+        #     documents.extend(loader.load())
+
+    text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=10)
+    chunked_documents = text_splitter.split_documents(documents)
+    return chunked_documents
 
 @st.cache_resource
 def embedding_db():
@@ -81,7 +101,7 @@ def retrieval_answer(query):
 
 def main():
     st.subheader("Generative Question-Answering with LLM")
-    uploaded_file = st.file_uploader(label='File upload', label_visibility='hidden', type=['pdf'])
+    uploaded_file = st.file_uploader(label='File upload', label_visibility='hidden', type=['pdf','docx','doc'])
     if uploaded_file is not None:
         st.markdown('''
         <style>
