@@ -78,6 +78,9 @@ def main():
         st.markdown('''
         <style>
             .uploadedFile {display: none}
+            #GithubIcon {
+                visibility: hidden;
+            }
         <style>''',
         unsafe_allow_html=True)
         with open(os.path.join("data",uploaded_file.name),"wb") as f:
