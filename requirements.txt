@@ -8,5 +8,3 @@ pdf2image
 streamlit
 tiktoken
 streamlit_js_eval
-pypdf
-docx2txt
