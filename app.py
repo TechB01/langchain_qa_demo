@@ -19,6 +19,14 @@ st.set_page_config(
     initial_sidebar_state="expanded",
     )
 
+st.markdown('''
+        <style>
+            #GithubIcon {
+                visibility: hidden;
+            }
+        <style>''',
+        unsafe_allow_html=True)
+
 load_dotenv()
 
 PINECONE_API_KEY = os.getenv('PINECONE_API_KEY')
@@ -78,9 +86,6 @@ def main():
         st.markdown('''
         <style>
             .uploadedFile {display: none}
-            #GithubIcon {
-                visibility: hidden;
-            }
         <style>''',
         unsafe_allow_html=True)
         with open(os.path.join("data",uploaded_file.name),"wb") as f:
