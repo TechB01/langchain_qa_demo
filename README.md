@@ -1,2 +1,2 @@
-# Chatbot-using-ChatGPT-and-Pinecone
-This is a chatbot using ChatGPT and Pinecone.
+# LLM Chain for querying multiple documents
+LLM Chain for querying multiple documents
