@@ -80,7 +80,7 @@ def retrieval_answer(query):
     qa = RetrievalQA.from_chain_type(
     llm=llm, 
     chain_type='stuff',
-    retriever=doc_db.as_retriever(search_type="mmr"),
+    retriever=doc_db.as_retriever(),
     # return_source_documents=True
     )
     query = query
