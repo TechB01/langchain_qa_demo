@@ -41,7 +41,6 @@ isExist = os.path.exists(path)
 if not isExist:
    # Create a new directory because it does not exist
    os.makedirs(path)
-   print("The new directory is created!")
 
 def doc_preprocessing():
     loader = DirectoryLoader(
@@ -51,8 +50,8 @@ def doc_preprocessing():
     )
     docs = loader.load()
     text_splitter = CharacterTextSplitter(
-        chunk_size=4000, 
-        chunk_overlap=0
+        chunk_size=1500, 
+        chunk_overlap=100
     )
     docs_split = text_splitter.split_documents(docs)
     return docs_split
@@ -73,14 +72,14 @@ def embedding_db():
     )
     return doc_db
 
-llm = OpenAI(temperature=0.2, top_p=0.65)
+llm = OpenAI(temperature=0.1, top_p=0.5)
 doc_db = embedding_db()
 
 def retrieval_answer(query):
     qa = RetrievalQA.from_chain_type(
     llm=llm, 
     chain_type='stuff',
-    retriever=doc_db.as_retriever(),
+    retriever=doc_db.as_retriever(search_kwargs={'k': 6}, search_type="mmr"),
     # return_source_documents=True
     )
     query = query
@@ -109,7 +108,7 @@ def main():
             st.info("Your Query: " + text_input)
             prompt_template = PromptTemplate.from_template(
                 # "{text_input}, Use only given pieces of context to answer the question at the end. If a question is out of the knowledge you politely refuse or If you don't know the answer just say that you don't know, Do not give any extra commentary about it by your own."
-                "{text_input}, Use only given pieces of context to answer the question at the end. If a question is out of the knowledge, you politely refuse or If you don't know the answer, just say that Sorry I don't know the answer based on the provided documents, Do not give any extra commentary about it by your own."
+                "{text_input}"
             )
             answer = retrieval_answer(prompt_template.format(text_input=text_input))
             st.success(answer)
